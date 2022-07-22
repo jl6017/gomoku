@@ -10,20 +10,20 @@ background: #fff;
 canvas {
 position: fixed;
 left: 50%;
-top: 55%;
+top: 50%;
 transform: translate(-50%, -50%);
 max-width: 100vw;
 max-height: 80vh;
-background-color:#fff;
+background-color:bisque;
 }
 
 div {
 position: fixed;
 left: 50%;
-top: 10%;
+top: 5%;
 transform: translate(-50%, -50%);
 max-width: 100vw;
-max-height: 10vh;
+max-height: 100vh;
 background-color:#fff;
 font-family:'Courier New', Courier, monospace;
 color:#042656;
