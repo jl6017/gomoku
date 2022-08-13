@@ -12,6 +12,14 @@ let black_or_white = 0;
 let black_list = [];
 let white_list = [];
 let win = 0;
+let id_x = 0;
+let id_y = 0;
+let empty_list = [];
+for (let i = 0; i<=grid; i++) {
+    for (let j = 0; j<=grid; j++){
+        empty_list.push([i,j]);
+    }
+}
 
 function draw_background(){
 	ctx.lineWidth = line_w1;
@@ -32,12 +40,23 @@ function draw_background(){
 	ctx.stroke();
 }
 
+
+function renew_empty_list(x, y){
+    for (let i = 0; i<empty_list.length; i++){
+        if (empty_list[i][0] == x && empty_list[i][1] == y){
+            empty_list.splice(i, 1)
+        }
+    }
+}
+
+
 function draw_circle(x_id, y_id){
     ctx.beginPath();
     ctx.arc(x_id * grid_w + margin, y_id * grid_w + margin, radius, 0, 2 * Math.PI, false);
     if (black_or_white==0){
         ctx.fillStyle = 'black';
         black_list.push([x_id, y_id]);
+        renew_empty_list(x_id, y_id);
         if (check_win() == 1){
             document.getElementById("p1").innerHTML = "Black win!";
             win = 1;
@@ -50,6 +69,7 @@ function draw_circle(x_id, y_id){
     else{
         ctx.fillStyle = 'white';
         white_list.push([x_id, y_id]);
+        renew_empty_list(x_id, y_id);
         if (check_win() == 1){
             document.getElementById("p1").innerHTML = "White win!";
             win = 1;
@@ -160,21 +180,54 @@ function check_win(){
     }
 }
 
+function eval_black_white(){
+    
+}
+
 function game(){
 	canvas.width=Width;
 	canvas.height=Height;
     draw_background();
+    alpha_beta();
 }
+
+function alpha_beta(){
+    let rand_idx = Math.floor(Math.random() * empty_list.length);
+
+    id_x = empty_list[rand_idx][0];
+    id_y = empty_list[rand_idx][1];
+    
+    console.log(id_x, id_y);
+    draw_circle(id_x, id_y);
+}
+
 window.addEventListener("click", (event) => { 
     const rect = canvas.getBoundingClientRect()
-    let id_x = Math.round(20 * (event.clientX-rect.left) / (rect.right-rect.left) - 3);
-    let id_y = Math.round(20 * (event.clientY-rect.top) / (rect.bottom-rect.top) - 3);
+
+    // if (black_or_white==0){
+    //     alpha_beta()
+    // }
+    // else{
+    //     id_x = Math.round(20 * (event.clientX-rect.left) / (rect.right-rect.left) - 3);
+    //     id_y = Math.round(20 * (event.clientY-rect.top) / (rect.bottom-rect.top) - 3);
+    // }
+
+    id_x = Math.round(20 * (event.clientX-rect.left) / (rect.right-rect.left) - 3);
+    id_y = Math.round(20 * (event.clientY-rect.top) / (rect.bottom-rect.top) - 3);
+    
     console.log(id_x, id_y);
     if (-1<id_x && id_x<15 && -1<id_y && id_y<15){
 
         if (in_list(id_x, id_y, black_list) == 0 && in_list(id_x, id_y, white_list) == 0){
             if (win == 0){
                 draw_circle(id_x, id_y);
+                if (check_win() == 1){
+                    document.getElementById("p1").innerHTML = "Black win!";
+                    win = 1;
+                }
+                if (win != 1){
+                    alpha_beta();
+                }             
             }      
         }      
     }
