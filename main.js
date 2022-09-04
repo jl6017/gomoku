@@ -11,7 +11,7 @@ const radius = 20;
 let black_or_white = 0;
 let black_list = [];
 let white_list = [];
-let win = 0;
+let terminal = 0;
 let id_x = 0;
 let id_y = 0;
 let empty_list = [];
@@ -59,7 +59,7 @@ function draw_circle(x_id, y_id){
         renew_empty_list(x_id, y_id);
         if (check_win() == 1){
             document.getElementById("p1").innerHTML = "Black win!";
-            win = 1;
+            terminal = 1;
         }
         else {
             document.getElementById("p1").innerHTML = "White turn";
@@ -70,9 +70,9 @@ function draw_circle(x_id, y_id){
         ctx.fillStyle = 'white';
         white_list.push([x_id, y_id]);
         renew_empty_list(x_id, y_id);
-        if (check_win() == 1){
+        if (check_win() == -1){
             document.getElementById("p1").innerHTML = "White win!";
-            win = 1;
+            terminal = 1;
         }
         else{
             document.getElementById("p1").innerHTML = "Black turn";
@@ -84,6 +84,7 @@ function draw_circle(x_id, y_id){
 }
 
 function in_list(x_n, y_n, list_n){
+    // if in list return 1, not in list, return 0
     let inlist = 0
     for (let i = 0; i<list_n.length; i++){
         if (list_n[i][0] == x_n && list_n[i][1] == y_n){
@@ -149,7 +150,7 @@ function check_win(){
             for (let dir = 0; dir<4; dir++){
                 count += in_list(direction[dir][0], direction[dir][1], white_list)
             }
-            if (count == 5) {return 1}
+            if (count == 5) {return -1}
 
             // direction 2
             direction = [[x_0 + 1, y_0 + 1], [x_0 + 2, y_0 + 2], [x_0 + 3, y_0 + 3], [x_0 + 4, y_0 + 4]]
@@ -157,7 +158,7 @@ function check_win(){
             for (let dir = 0; dir<4; dir++){
                 count += in_list(direction[dir][0], direction[dir][1], white_list)
             }
-            if (count == 5) {return 1}
+            if (count == 5) {return -1}
 
             // direction 3
             direction = [[x_0, y_0 + 1], [x_0, y_0 + 2], [x_0, y_0 + 3], [x_0, y_0 + 4]]
@@ -165,7 +166,7 @@ function check_win(){
             for (let dir = 0; dir<4; dir++){
                 count += in_list(direction[dir][0], direction[dir][1], white_list)
             }
-            if (count == 5) {return 1}
+            if (count == 5) {return -1}
 
             // direction 4
             direction = [[x_0 - 1, y_0 + 1], [x_0 - 2, y_0 + 2], [x_0 - 3, y_0 + 3], [x_0 - 4, y_0 + 4]]
@@ -173,7 +174,7 @@ function check_win(){
             for (let dir = 0; dir<4; dir++){
                 count += in_list(direction[dir][0], direction[dir][1], white_list)
             }
-            if (count == 5) {return 1}
+            if (count == 5) {return -1}
         }
         return 0
 
@@ -181,7 +182,33 @@ function check_win(){
 }
 
 function eval_black_white(){
-    
+    let black_score_list = [];
+
+    // black
+    for (let i = 0; i<black_list.length; i++){
+        x_0 = black_list[i][0]
+        y_0 = black_list[i][1]
+        let score = 0
+        for (let step = -1; step < 6; step++){
+            // direction 1
+            let x_i = x_0 + step
+            let y_i = y_0 + step
+
+            if (in_list(x_i, y_i, white_list) == 1) {
+                // in white list
+                score -= 1
+            }
+            else if (in_list(x_i, y_i, black_list) == 1) {
+                // in black list
+                score += 1                
+            }
+
+            
+        }
+
+    }
+
+
 }
 
 function game(){
@@ -219,13 +246,13 @@ window.addEventListener("click", (event) => {
     if (-1<id_x && id_x<15 && -1<id_y && id_y<15){
 
         if (in_list(id_x, id_y, black_list) == 0 && in_list(id_x, id_y, white_list) == 0){
-            if (win == 0){
+            if (terminal == 0){
                 draw_circle(id_x, id_y);
                 if (check_win() == 1){
                     document.getElementById("p1").innerHTML = "Black win!";
-                    win = 1;
+                    terminal = 1;
                 }
-                if (win != 1){
+                if (terminal != 1){
                     alpha_beta();
                 }             
             }      
