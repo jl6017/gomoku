@@ -21,6 +21,13 @@ for (let i = 0; i<=grid; i++) {
     }
 }
 
+// four directions -, /, |, \
+let dir_x = [1, 1, 0,-1];
+let dir_y = [0, 1, 1, 1];
+let score_board = [
+
+]
+
 function draw_background(){
 	ctx.lineWidth = line_w1;
 	ctx.beginPath();
@@ -57,7 +64,7 @@ function draw_circle(x_id, y_id){
         ctx.fillStyle = 'black';
         black_list.push([x_id, y_id]);
         renew_empty_list(x_id, y_id);
-        if (check_win() == 1){
+        if (check_win() == 10000){
             document.getElementById("p1").innerHTML = "Black win!";
             terminal = 1;
         }
@@ -70,7 +77,7 @@ function draw_circle(x_id, y_id){
         ctx.fillStyle = 'white';
         white_list.push([x_id, y_id]);
         renew_empty_list(x_id, y_id);
-        if (check_win() == -1){
+        if (check_win() == -10000){
             document.getElementById("p1").innerHTML = "White win!";
             terminal = 1;
         }
@@ -105,37 +112,19 @@ function check_win(){
         for (let i = 0; i<black_list.length; i++){
             x_0 = black_list[i][0]
             y_0 = black_list[i][1]
-            // direction 1
-            direction = [[x_0 + 1, y_0], [x_0 + 2, y_0], [x_0 + 3, y_0], [x_0 + 4, y_0]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], black_list)
+            // four directions
+            for (let d = 0; d<4; d++){
+                direction = [
+                    [x_0 + 1 * dir_x[d], y_0 + 1 * dir_y[d]], 
+                    [x_0 + 2 * dir_x[d], y_0 + 2 * dir_y[d]], 
+                    [x_0 + 3 * dir_x[d], y_0 + 3 * dir_y[d]], 
+                    [x_0 + 4 * dir_x[d], y_0 + 4 * dir_y[d]]]
+                count = 1
+                for (let dir = 0; dir<4; dir++){
+                    count += in_list(direction[dir][0], direction[dir][1], black_list)
+                }
+                if (count == 5) {return 10000}
             }
-            if (count == 5) {return 1}
-
-            // direction 2
-            direction = [[x_0 + 1, y_0 + 1], [x_0 + 2, y_0 + 2], [x_0 + 3, y_0 + 3], [x_0 + 4, y_0 + 4]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], black_list)
-            }
-            if (count == 5) {return 1}
-
-            // direction 3
-            direction = [[x_0, y_0 + 1], [x_0, y_0 + 2], [x_0, y_0 + 3], [x_0, y_0 + 4]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], black_list)
-            }
-            if (count == 5) {return 1}
-
-            // direction 4
-            direction = [[x_0 - 1, y_0 + 1], [x_0 - 2, y_0 + 2], [x_0 - 3, y_0 + 3], [x_0 - 4, y_0 + 4]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], black_list)
-            }
-            if (count == 5) {return 1}
         }
         return 0
     }
@@ -145,66 +134,55 @@ function check_win(){
             x_0 = white_list[i][0]
             y_0 = white_list[i][1]
             // direction 1
-            direction = [[x_0 + 1, y_0], [x_0 + 2, y_0], [x_0 + 3, y_0], [x_0 + 4, y_0]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], white_list)
+            for (let d = 0; d<4; d++){
+                direction = [
+                    [x_0 + 1 * dir_x[d], y_0 + 1 * dir_y[d]], 
+                    [x_0 + 2 * dir_x[d], y_0 + 2 * dir_y[d]], 
+                    [x_0 + 3 * dir_x[d], y_0 + 3 * dir_y[d]], 
+                    [x_0 + 4 * dir_x[d], y_0 + 4 * dir_y[d]]]
+                count = 1
+                for (let dir = 0; dir<4; dir++){
+                    count += in_list(direction[dir][0], direction[dir][1], white_list)
+                }
+                if (count == 5) {return -10000}
             }
-            if (count == 5) {return -1}
-
-            // direction 2
-            direction = [[x_0 + 1, y_0 + 1], [x_0 + 2, y_0 + 2], [x_0 + 3, y_0 + 3], [x_0 + 4, y_0 + 4]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], white_list)
-            }
-            if (count == 5) {return -1}
-
-            // direction 3
-            direction = [[x_0, y_0 + 1], [x_0, y_0 + 2], [x_0, y_0 + 3], [x_0, y_0 + 4]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], white_list)
-            }
-            if (count == 5) {return -1}
-
-            // direction 4
-            direction = [[x_0 - 1, y_0 + 1], [x_0 - 2, y_0 + 2], [x_0 - 3, y_0 + 3], [x_0 - 4, y_0 + 4]]
-            count = 1
-            for (let dir = 0; dir<4; dir++){
-                count += in_list(direction[dir][0], direction[dir][1], white_list)
-            }
-            if (count == 5) {return -1}
         }
         return 0
-
     }
 }
 
 function eval_black_white(){
-    let black_score_list = [];
-
+    let count = 0
+    let blocks = 0
+    let x_0 = 0
+    let y_0 = 0
+    let direction = []
+    let score = 0
+    
     // black
     for (let i = 0; i<black_list.length; i++){
         x_0 = black_list[i][0]
         y_0 = black_list[i][1]
-        let score = 0
-        for (let step = -1; step < 6; step++){
-            // direction 1
-            let x_i = x_0 + step
-            let y_i = y_0 + step
 
-            if (in_list(x_i, y_i, white_list) == 1) {
-                // in white list
-                score -= 1
-            }
-            else if (in_list(x_i, y_i, black_list) == 1) {
-                // in black list
-                score += 1                
-            }
+        for (let d = 0; d < 4; d++){
+            direction = [
+                [x_0 + 1 * dir_x[d], y_0 + 1 * dir_y[d]], 
+                [x_0 + 2 * dir_x[d], y_0 + 2 * dir_y[d]], 
+                [x_0 + 3 * dir_x[d], y_0 + 3 * dir_y[d]], 
+                [x_0 + 4 * dir_x[d], y_0 + 4 * dir_y[d]]]  
+                
+            for (let steps = 0; steps<4; steps++){
+                if (in_list(direction[steps][0], direction[steps][1], black_list) == 1){
+                    count += 1;
+                }
+                // else if (){
 
-            
+                //     break
+                // }
+            }
         }
+
+
 
     }
 
@@ -248,7 +226,7 @@ window.addEventListener("click", (event) => {
         if (in_list(id_x, id_y, black_list) == 0 && in_list(id_x, id_y, white_list) == 0){
             if (terminal == 0){
                 draw_circle(id_x, id_y);
-                if (check_win() == 1){
+                if (check_win() == 10000){
                     document.getElementById("p1").innerHTML = "Black win!";
                     terminal = 1;
                 }
