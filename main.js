@@ -152,12 +152,12 @@ function check_win(){
 }
 
 function eval_black_white(){
-    let count = 0
-    let blocks = 0
-    let x_0 = 0
-    let y_0 = 0
-    let direction = []
-    let score = 0
+    let count = 0;
+    let blocks = 0;
+    let x_0 = 0;
+    let y_0 = 0;
+    let direction = [];
+    let score = 0;
     
     // black
     for (let i = 0; i<black_list.length; i++){
@@ -165,6 +165,9 @@ function eval_black_white(){
         y_0 = black_list[i][1]
 
         for (let d = 0; d < 4; d++){
+            // four directions
+            count = 0;
+            blocks = 0;
             direction = [
                 [x_0 + 1 * dir_x[d], y_0 + 1 * dir_y[d]], 
                 [x_0 + 2 * dir_x[d], y_0 + 2 * dir_y[d]], 
@@ -175,10 +178,20 @@ function eval_black_white(){
                 if (in_list(direction[steps][0], direction[steps][1], black_list) == 1){
                     count += 1;
                 }
-                // else if (){
+                else if (in_list(direction[steps][0], direction[steps][1], white_list) == 1){
+                    blocks += 1;
+                    break
+                }
+                else if (in_list(direction[steps][0], direction[steps][1], empty_list) == 1){
 
-                //     break
-                // }
+                    break
+                }
+            }
+
+            // check one step before
+            if (in_list(x_0 - 1 * dir_x[d], y_0 - 1 * dir_y[d], white_list) == 1){
+                blocks += 1
+                break
             }
         }
 
