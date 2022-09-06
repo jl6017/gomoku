@@ -332,9 +332,9 @@ function max_value(state, alpha, beta, depth){
 }
 
 function min_value(state, alpha, beta, depth){
-    let temp_black = state[0];
-    let temp_white = state[1];
-    let temp_empty = state[2];
+    let temp_black2 = state[0];
+    let temp_white2 = state[1];
+    let temp_empty2 = state[2];
     // let temp_score = eval_black_white(temp_black, temp_white, temp_empty)
     // if (temp_score >= 100000 || temp_score <= -100000 || depth > max_depth){
     //     // terminal
@@ -342,25 +342,25 @@ function min_value(state, alpha, beta, depth){
     //     return [temp_score, 0]
     // }
 
-    let temp_value = 1000000
-    let best_step = temp_empty[0]
-    for (let id = 0; id < temp_empty.length; id++){
-        let temp_black_copy = JSON.parse(JSON.stringify(temp_black));
-        let temp_white_copy = JSON.parse(JSON.stringify(temp_white));
-        let temp_empty_copy = JSON.parse(JSON.stringify(temp_empty));  // deep copy
-        let next_step = temp_empty_copy[id];
-        temp_empty_copy.splice(id, 1);
-        temp_black_copy.push(next_step);
-        let min_value = eval_black_white(temp_black_copy, temp_white_copy, temp_empty_copy)
-        if (min_value < temp_value){
-            temp_value = min_value;
-            best_step = next_step;
+    let temp_value2 = 1000000
+    let best_step2 = temp_empty2[0]
+    for (let id = 0; id < temp_empty2.length; id++){
+        let temp_black_copy2 = JSON.parse(JSON.stringify(temp_black2));
+        let temp_white_copy2 = JSON.parse(JSON.stringify(temp_white2));
+        let temp_empty_copy2 = JSON.parse(JSON.stringify(temp_empty2));  // deep copy
+        let next_step2 = temp_empty_copy2[id];
+        temp_empty_copy2.splice(id, 1);
+        temp_white_copy2.push(next_step2);
+        let min_value = eval_black_white(temp_black_copy2, temp_white_copy2, temp_empty_copy2)
+        if (min_value < temp_value2){
+            temp_value2 = min_value;
+            best_step2 = next_step2;
         }
         // let min_v = max_value([temp_black_copy, temp_white_copy, temp_empty_copy], alpha, beta, depth+1)[0];
 
 
     }
-    return temp_value;
+    return temp_value2;
 }
 
 window.addEventListener("click", (event) => { 
