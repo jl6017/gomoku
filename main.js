@@ -262,12 +262,14 @@ function alpha_beta(){
     }
     else {
 
-        let rand_idx = Math.floor(Math.random() * empty_list.length);
-        console.log(empty_list.length);
-        black_search_algorithm();
-        console.log(empty_list.length);
-        id_x = empty_list[rand_idx][0];
-        id_y = empty_list[rand_idx][1]; 
+        // let rand_idx = Math.floor(Math.random() * empty_list.length);
+        // console.log(empty_list.length);
+        let step = black_search_algorithm();
+        // console.log(empty_list.length);
+        // id_x = empty_list[rand_idx][0];
+        // id_y = empty_list[rand_idx][1]; 
+        id_x = step[0];
+        id_y = step[1];
     }
 
 
@@ -288,9 +290,9 @@ function black_search_algorithm(){
 
     let orig_state = [black_list, white_list, empty_list];
 
-    max_value(orig_state, -1000000, 1000000, depth);
+    let max_step = max_value(orig_state, -1000000, 1000000, depth);
 
-    return [give_x, give_y];
+    return max_step;
 }
 
 function max_value(state, alpha, beta, depth){
@@ -304,6 +306,7 @@ function max_value(state, alpha, beta, depth){
     }
 
     let temp_value = -1000000
+    let best_step = temp_empty[0]
     for (let id = 0; id < temp_empty.length; id++){
         let temp_black_copy = JSON.parse(JSON.stringify(temp_black));
         let temp_white_copy = JSON.parse(JSON.stringify(temp_white));
@@ -311,12 +314,17 @@ function max_value(state, alpha, beta, depth){
         let next_step = temp_empty_copy[id];
         temp_empty_copy.splice(id, 1);
         temp_black_copy.push(next_step);
-        eval_black_white([temp_black_copy, temp_white_copy, temp_empty_copy])
-        let min_v = min_value([temp_black_copy, temp_white_copy, temp_empty_copy], alpha, beta, depth+1)[0];
+        let max_value = eval_black_white(temp_black_copy, temp_white_copy, temp_empty_copy)
+        if (max_value > temp_value){
+            temp_value = max_value;
+            best_step = next_step;
+        }
+        // let min_v = min_value([temp_black_copy, temp_white_copy, temp_empty_copy], alpha, beta, depth+1)[0];
+
 
     }
 
-    // return next_state;
+    return best_step;
 }
 
 function min_value(state, alpha, beta, depth){
