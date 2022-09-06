@@ -25,9 +25,9 @@ for (let i = 0; i<=grid; i++) {
 const dir_x = [1, 1, 0,-1];
 const dir_y = [0, 1, 1, 1];
 const score_board = [
-    [0,20,100,500,2500,100000],
-    [0, 0, 20,100, 500,100000],
-    [0, 0,  0,  0,   0,100000]
+    [0,20,100,500,2500,200000],
+    [0, 0, 20,100, 500,200000],
+    [0, 0,  0,  0,   0,200000]
 ];
 // zero block; one block; two blocks
 const max_depth = 3;
@@ -69,6 +69,7 @@ function draw_circle(x_id, y_id){
         ctx.fillStyle = 'black';
         black_list.push([x_id, y_id]);
         renew_empty_list(x_id, y_id);
+        console.log("black",eval_black_white(black_list, white_list, empty_list))
         if (eval_black_white(black_list, white_list, empty_list) >= 100000){
             document.getElementById("p1").innerHTML = "Black win!";
             terminal = 1;
@@ -82,6 +83,7 @@ function draw_circle(x_id, y_id){
         ctx.fillStyle = 'white';
         white_list.push([x_id, y_id]);
         renew_empty_list(x_id, y_id);
+        console.log("white", eval_black_white(black_list, white_list, empty_list))
         if (eval_black_white(black_list, white_list, empty_list) <= -100000){
             document.getElementById("p1").innerHTML = "White win!";
             terminal = 1;
@@ -274,7 +276,7 @@ function alpha_beta(){
 
 
 
-    console.log(eval_black_white(black_list, white_list, empty_list));
+    // console.log(eval_black_white(black_list, white_list, empty_list));
 
     draw_circle(id_x, id_y);
     if (eval_black_white(black_list, white_list, empty_list) >= 100000){
@@ -299,11 +301,12 @@ function max_value(state, alpha, beta, depth){
     let temp_black = state[0];
     let temp_white = state[1];
     let temp_empty = state[2];
-    let temp_score = eval_black_white(temp_black, temp_white, temp_empty)
-    if (temp_score >= 100000 || temp_score <= -100000 || depth > max_depth){
-        // terminal
-        return [temp_score, 0]
-    }
+    // let temp_score = eval_black_white(temp_black, temp_white, temp_empty)
+    // if (temp_score >= 100000 || temp_score <= -100000 || depth > max_depth){
+    //     // terminal
+    //     console.log("here")
+    //     return [temp_score, 0]
+    // }
 
     let temp_value = -1000000
     let best_step = temp_empty[0]
@@ -314,13 +317,14 @@ function max_value(state, alpha, beta, depth){
         let next_step = temp_empty_copy[id];
         temp_empty_copy.splice(id, 1);
         temp_black_copy.push(next_step);
-        let max_value = eval_black_white(temp_black_copy, temp_white_copy, temp_empty_copy)
-        if (max_value > temp_value){
-            temp_value = max_value;
+        // let max_value = eval_black_white(temp_black_copy, temp_white_copy, temp_empty_copy)
+
+        let min_v = min_value([temp_black_copy, temp_white_copy, temp_empty_copy], alpha, beta, depth+1);
+
+        if (min_v > temp_value){
+            temp_value = min_v;
             best_step = next_step;
         }
-        // let min_v = min_value([temp_black_copy, temp_white_copy, temp_empty_copy], alpha, beta, depth+1)[0];
-
 
     }
 
@@ -328,9 +332,35 @@ function max_value(state, alpha, beta, depth){
 }
 
 function min_value(state, alpha, beta, depth){
-    let next_state = state;
-    return next_state;
+    let temp_black = state[0];
+    let temp_white = state[1];
+    let temp_empty = state[2];
+    // let temp_score = eval_black_white(temp_black, temp_white, temp_empty)
+    // if (temp_score >= 100000 || temp_score <= -100000 || depth > max_depth){
+    //     // terminal
+    //     console.log("here")
+    //     return [temp_score, 0]
+    // }
 
+    let temp_value = 1000000
+    let best_step = temp_empty[0]
+    for (let id = 0; id < temp_empty.length; id++){
+        let temp_black_copy = JSON.parse(JSON.stringify(temp_black));
+        let temp_white_copy = JSON.parse(JSON.stringify(temp_white));
+        let temp_empty_copy = JSON.parse(JSON.stringify(temp_empty));  // deep copy
+        let next_step = temp_empty_copy[id];
+        temp_empty_copy.splice(id, 1);
+        temp_black_copy.push(next_step);
+        let min_value = eval_black_white(temp_black_copy, temp_white_copy, temp_empty_copy)
+        if (min_value < temp_value){
+            temp_value = min_value;
+            best_step = next_step;
+        }
+        // let min_v = max_value([temp_black_copy, temp_white_copy, temp_empty_copy], alpha, beta, depth+1)[0];
+
+
+    }
+    return temp_value;
 }
 
 window.addEventListener("click", (event) => { 
