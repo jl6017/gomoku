@@ -62,40 +62,76 @@ function renew_empty_list(x, y){
 }
 
 
-function draw_circle(x_id, y_id){
+function draw_white_circle(x_id, y_id){
     ctx.beginPath();
     ctx.arc(x_id * grid_w + margin, y_id * grid_w + margin, radius, 0, 2 * Math.PI, false);
-    if (black_or_white==0){
-        ctx.fillStyle = 'black';
-        black_list.push([x_id, y_id]);
-        renew_empty_list(x_id, y_id);
-        console.log("black",eval_black_white(black_list, white_list, empty_list))
-        if (eval_black_white(black_list, white_list, empty_list) >= 100000){
-            document.getElementById("p1").innerHTML = "Black win!";
-            terminal = 1;
-        }
-        else {
-            document.getElementById("p1").innerHTML = "White turn";
-        }
-        black_or_white = 1;
+    ctx.fillStyle = 'white';
+    white_list.push([x_id, y_id]);
+    renew_empty_list(x_id, y_id);
+    console.log("white", eval_black_white(black_list, white_list, empty_list))
+    if (eval_black_white(black_list, white_list, empty_list) <= -100000){
+        document.getElementById("p1").innerHTML = "White win!";
+        terminal = 1;
     }
     else{
-        ctx.fillStyle = 'white';
-        white_list.push([x_id, y_id]);
-        renew_empty_list(x_id, y_id);
-        console.log("white", eval_black_white(black_list, white_list, empty_list))
-        if (eval_black_white(black_list, white_list, empty_list) <= -100000){
-            document.getElementById("p1").innerHTML = "White win!";
-            terminal = 1;
-        }
-        else{
-            document.getElementById("p1").innerHTML = "Black turn";
-        }
-        black_or_white = 0;
-    }
-    
+        document.getElementById("p1").innerHTML = "Black turn";
+    } 
     ctx.fill();
 }
+
+function draw_black_circle(x_id, y_id){
+    ctx.beginPath();
+    ctx.arc(x_id * grid_w + margin, y_id * grid_w + margin, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = 'black';
+    black_list.push([x_id, y_id]);
+    renew_empty_list(x_id, y_id);
+    console.log("black",eval_black_white(black_list, white_list, empty_list))
+    if (eval_black_white(black_list, white_list, empty_list) >= 100000){
+        document.getElementById("p1").innerHTML = "Black win!";
+        terminal = 1;
+    }
+    else {
+        document.getElementById("p1").innerHTML = "White turn";
+    }
+    ctx.fill();
+}
+
+
+
+// function draw_circle(x_id, y_id){
+//     ctx.beginPath();
+//     ctx.arc(x_id * grid_w + margin, y_id * grid_w + margin, radius, 0, 2 * Math.PI, false);
+//     if (black_or_white==0){
+//         ctx.fillStyle = 'black';
+//         black_list.push([x_id, y_id]);
+//         renew_empty_list(x_id, y_id);
+//         console.log("black",eval_black_white(black_list, white_list, empty_list))
+//         if (eval_black_white(black_list, white_list, empty_list) >= 100000){
+//             document.getElementById("p1").innerHTML = "Black win!";
+//             terminal = 1;
+//         }
+//         else {
+//             document.getElementById("p1").innerHTML = "White turn";
+//         }
+//         black_or_white = 1;
+//     }
+//     else{
+//         ctx.fillStyle = 'white';
+//         white_list.push([x_id, y_id]);
+//         renew_empty_list(x_id, y_id);
+//         console.log("white", eval_black_white(black_list, white_list, empty_list))
+//         if (eval_black_white(black_list, white_list, empty_list) <= -100000){
+//             document.getElementById("p1").innerHTML = "White win!";
+//             terminal = 1;
+//         }
+//         else{
+//             document.getElementById("p1").innerHTML = "Black turn";
+//         }
+//         black_or_white = 0;
+//     }
+    
+//     ctx.fill();
+// }
 
 function in_list(x_n, y_n, list_n){
     // if in list return 1, not in list, return 0
@@ -278,7 +314,7 @@ function alpha_beta(){
 
     // console.log(eval_black_white(black_list, white_list, empty_list));
 
-    draw_circle(id_x, id_y);
+    draw_black_circle(id_x, id_y);
     if (eval_black_white(black_list, white_list, empty_list) >= 100000){
         document.getElementById("p1").innerHTML = "Black win!";
         terminal = 1;
@@ -382,7 +418,8 @@ window.addEventListener("click", (event) => {
 
         if (in_list(id_x, id_y, black_list) == 0 && in_list(id_x, id_y, white_list) == 0){
             if (terminal == 0){
-                draw_circle(id_x, id_y);
+                draw_white_circle(id_x, id_y);
+                console.log("why")
 
                 if (terminal != 1){
                     alpha_beta();
